@@ -1,25 +1,31 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import MemberList from './components/MemberList';
+import {fetchReasons} from './services/ReasonsService';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      people: []
+    };
+    this.fetchNewReasons = this.fetchNewReasons.bind(this);
+  }
+  fetchNewReasons() {
+    fetchReasons()
+      .then(data => {
+        this.setState({
+          people: data.results
+        });
+      });
+  }
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <ul className="allMembers">
+          <MemberList people = {this.state.people} />
+        </ul>
+        <button onClick= {this.fetchNewReasons} type= "button">Buscar</button>
       </div>
     );
   }
